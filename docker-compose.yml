@@ -1,0 +1,26 @@
+version: '3.9'
+
+services:
+  db:
+    image: 'postgres:latest'
+    container_name: lvl0
+    environment:
+      - POSTGRES_USER=go
+      - POSTGRES_PASSWORD=go
+      - POSTGRES_DB=go
+      - PGDATA=/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
+    volumes:
+      - go:/var/lib/postgresql/data
+    restart: always
+  mq:
+    image: nats-streaming
+    container_name: nats-streaming
+    ports:
+      - '4222:4222'
+      - '8222:8222'
+    restart: always
+
+volumes:
+  go:
