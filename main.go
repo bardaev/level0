@@ -22,7 +22,7 @@ func main() {
 		panic(err)
 	}
 
-	db.AutoMigrate(&model.Items{}, &model.Payment{}, &model.Delivery{}, &model.WbOrder{})
+	db.AutoMigrate(&model.WbOrder{})
 
 	sc, err := stan.Connect("test-cluster", "test")
 
