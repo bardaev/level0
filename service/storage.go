@@ -6,14 +6,26 @@ import (
 )
 
 type Storage interface {
-	Save(model.WbOrder)
+	Save(...model.WbOrder) error
+	GetAll() ([]model.WbOrder, error)
 }
 
-type StorageImpl struct {
-	DB DbStorage
+type StorageData struct {
+	DB  Storage
+	MEM Storage
 }
 
-func (s StorageImpl) Save(order model.WbOrder) {
+func (s *StorageData) InitMemCache() {
+	orders, err := s.DB.GetAll()
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	s.MEM.Save(orders...)
+}
+
+func (s *StorageData) Save(order model.WbOrder) {
 	err := s.DB.Save(order)
 	if err != nil {
 		log.Fatal(err)

@@ -30,7 +30,10 @@ func main() {
 		panic(err)
 	}
 
-	var storage service.Storage = service.StorageImpl{DB: service.DbStorageImpl{DB: db}}
+	var storage service.StorageData = service.StorageData{
+		DB:  &service.DbStorageImpl{DB: db},
+		MEM: &service.MemStorageImpl{},
+	}
 
 	sub, err := sc.Subscribe("foo", func(msg *stan.Msg) {
 		var wborder model.WbOrder
