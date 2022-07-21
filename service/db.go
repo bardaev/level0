@@ -20,13 +20,14 @@ func (ds *DbStorageImpl) SaveAll(orders map[uint]model.WbOrder) {
 }
 
 func (ds *DbStorageImpl) GetAll() (map[uint]model.WbOrder, error) {
-	orders := map[uint]interface{}{}
-	result := ds.DB.Table("wb_orders").Take(&orders)
+
+	var orders []model.WbOrder
+	result := ds.DB.Find(&orders)
 	if result.Error != nil {
 		return nil, result.Error
 	}
 
-	return ds.convertMapToWbOrder(&orders), nil
+	return ds.convertSliceToWbOrder(orders), nil
 }
 
 func (ds *DbStorageImpl) Get(id uint) model.WbOrder {
@@ -35,14 +36,12 @@ func (ds *DbStorageImpl) Get(id uint) model.WbOrder {
 	return order
 }
 
-func (ds *DbStorageImpl) convertMapToWbOrder(mapOrders *map[uint]interface{}) map[uint]model.WbOrder {
-	result := make(map[uint]model.WbOrder)
+func (ds *DbStorageImpl) convertSliceToWbOrder(arrOrders []model.WbOrder) map[uint]model.WbOrder {
+	var mapResult map[uint]model.WbOrder = make(map[uint]model.WbOrder, 0)
 
-	for k, v := range *mapOrders {
-		if obj, ok := v.(model.WbOrder); ok {
-			result[k] = obj
-		}
+	for _, val := range arrOrders {
+		mapResult[val.ID] = val
 	}
 
-	return result
+	return mapResult
 }

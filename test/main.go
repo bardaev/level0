@@ -25,11 +25,6 @@ func main() {
 
 	defer file.Close()
 
-	// for i := 1; i < 10; i++ {
-	// 	sc.Publish("foo", []byte(strconv.Itoa(i)))
-	// 	time.Sleep(time.Second)
-	// }
-
 	defer sc.Close()
 
 	data, err := ioutil.ReadAll(file)
